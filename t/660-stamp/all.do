@@ -1,1 +1,1 @@
-redo stamptest
+redo stamptest pipetest

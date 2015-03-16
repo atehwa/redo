@@ -53,9 +53,18 @@ if [ -z "$DO_BUILT" ]; then
 		ln -s "$REDO" "$DO_PATH/$d";
 	done
 	[ -e /bin/true ] && TRUE=/bin/true || TRUE=/usr/bin/true
-	for d in redo-ifcreate redo-stamp redo-always; do 
+	for d in redo-ifcreate redo-always; do
 		ln -s $TRUE "$DO_PATH/$d";
 	done
+	cat > "$DO_PATH/redo-stamp" <<EOF
+#!/bin/sh
+if [ -t 0 ]; then
+   true
+else
+   cat > /dev/null
+fi
+EOF
+	chmod 755 "$DO_PATH/redo-stamp"
 fi
 
 
