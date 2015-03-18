@@ -15,6 +15,7 @@ for sh in dash sh /usr/xpg4/bin/sh ash posh mksh ksh ksh88 ksh93 pdksh \
 		bash zsh busybox; do
 	printf "%-30s" "Testing $sh..."
 	FOUND=`which $sh 2>/dev/null` || { echo "missing"; continue; }
+	test -L "$FOUND" && { echo "just a symbolic link"; continue; }
 	
 	# It's important for the file to actually be named 'sh'.  Some
 	# shells (like bash and zsh) only go into POSIX-compatible mode if
