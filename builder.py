@@ -14,9 +14,10 @@ def _default_do_files(filename):
     
 
 def _possible_do_files(t):
+    t = os.path.normpath(os.path.join(vars.BASE, t))
     dirname,filename = os.path.split(t)
-    yield (os.path.join(vars.BASE, dirname), "%s.do" % filename,
-           '', filename, '')
+    yield (dirname, "%s.do" % filename, '', filename, '')
+    yield (dirname + '/do', "%s.do" % filename, '', '../' + filename, '')
 
     # It's important to try every possibility in a directory before resorting
     # to a parent directory.  Think about nested projects: I don't want
@@ -24,8 +25,6 @@ def _possible_do_files(t):
     # the former one might just be an artifact of someone embedding my project
     # into theirs as a subdir.  When they do, my rules should still be used
     # for building my project in *all* cases.
-    t = os.path.normpath(os.path.join(vars.BASE, t))
-    dirname,filename = os.path.split(t)
     dirbits = dirname.split('/')
     for i in range(len(dirbits), -1, -1):
         basedir = join('/', dirbits[:i])
@@ -33,6 +32,8 @@ def _possible_do_files(t):
         for dofile,basename,ext in _default_do_files(filename):
             yield (basedir, dofile,
                    subdir, os.path.join(subdir, basename), ext)
+            yield (basedir + '/do', dofile,
+                   '../' + subdir, os.path.join('../' + subdir, basename), ext)
         
 
 def _find_do_file(f):
